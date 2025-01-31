@@ -11,7 +11,9 @@ public:
 
 
 public:
+
 	T value;
+	
 	Node<T>* next;
 	Node<T>* previous;
 };
