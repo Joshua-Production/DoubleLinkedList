@@ -97,7 +97,7 @@ inline void List<T>::pushBack(const T& value)
 template<typename T>
 inline T List<T>::popFront()
 {
-	if (!m_head)
+	if (!m_tail)
 		return T();
 	
 	T value = m_head->value;
@@ -135,18 +135,18 @@ inline T List<T>::popBack()
 
 	T value = m_tail->value;
 
-	if (m_head == m_tail)  
+	if (!m_tail->previous)  
 	{
 		delete m_tail;
 		m_head = nullptr;
 		m_tail = nullptr;
 		m_length = 0;
+		return value;
 	}
 	else  
 	{
 		m_tail = m_tail->previous; 
 		delete m_tail->next;  
-		m_tail->next = nullptr;  
 		m_length--;
 	}
 
@@ -155,7 +155,7 @@ inline T List<T>::popBack()
 template<typename T>
 inline bool List<T>::insert(const T& value, int index)
 {
-	if (index < 0 || index >= m_length )
+	if (index < 0 || index > m_length )
 		return false;
 
 	if (!m_tail || index == 0)
@@ -257,7 +257,7 @@ inline Iterator<T> List<T>::end() const
 {
 	if(!m_tail)
 	return Iterator<T>();
-	return Iterator<T>(m_tail);
+	return Iterator<T>(m_tail->next);
 }
 
 template<typename T>
