@@ -60,22 +60,18 @@ namespace DoubleLinkedListTests
 		}
 		TEST_METHOD(PushBack)
 		{
-			List<int> list;
-			list.pushBack(1);
-			Assert::AreEqual(1, list.first());      
-			Assert::AreEqual(1, list.last());     
-			Assert::AreEqual(1, list.getLength());  
+			List<int> list = { 1,2 };
 
-			list.pushBack(2);
-			Assert::AreEqual(1, list.first());      
-			Assert::AreEqual(2, list.last());       
-			Assert::AreEqual(2, list.getLength()); 
+			list.pushBack(11);
 
-			list.pushBack(3);
-			Assert::AreEqual(1, list.first());      
-			Assert::AreEqual(3, list.last());     
-			Assert::AreEqual(2, *(list.end()--));    
-			Assert::AreEqual(3, list.getLength());
+			Assert::AreEqual(11, list.last());
+			Assert::AreEqual(1, *(list.begin()));
+
+			list.pushBack(-5);
+			Assert::AreEqual(-5, list.last());
+
+			list.remove(list.last());
+			Assert::AreEqual(11, list.last());
 		}
 		TEST_METHOD(PopFront)
 		{
@@ -116,6 +112,40 @@ namespace DoubleLinkedListTests
 			Assert::AreEqual(0, list.last());       
 		}
 
+		TEST_METHOD(Insert)
+		{
+			List<int> list;
+
+			
+			bool success = list.insert(1, 0);
+			Assert::IsTrue(success);
+			Assert::AreEqual(1, list.getLength());
+			Assert::AreEqual(1, list.first());
+			Assert::AreEqual(1, list.last());
+
+			success = list.insert(2, 1);
+			Assert::IsTrue(success);
+			Assert::AreEqual(2, list.getLength());
+			Assert::AreEqual(1, list.first());
+			Assert::AreEqual(2, list.last());
+
+			
+			success = list.insert(3, 1);
+			Assert::IsTrue(success);
+			Assert::AreEqual(3, list.getLength());
+			Assert::AreEqual(1, list.first());
+			Assert::AreEqual(3, *(++(list.begin()))); 
+			Assert::AreEqual(2, list.last());
+
+			
+			success = list.insert(4, 3);
+			Assert::IsTrue(success);
+			Assert::AreEqual(4, list.getLength());
+			Assert::AreEqual(1, list.first());
+			Assert::AreEqual(4, list.last());
+		}
+
+		
 
 	};
 }
