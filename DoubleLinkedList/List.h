@@ -1,10 +1,7 @@
 #pragma once
-
 #include "Node.h"
 #include "Iterator.h"
-#include "initializer_list"
-
-
+#include <initializer_list>
 template<typename T>
 class List
 {
@@ -25,6 +22,9 @@ public:
 	Iterator<T> end() const;
 	void destroy();
 	int getLength() const;
+
+
+
 private:
 	Node<T>* m_head;
 	Node<T>* m_tail;
@@ -35,13 +35,12 @@ template<typename T>
 inline List<T>::List() : m_head(nullptr), m_tail(nullptr), m_length(0)
 {
 }
+
 template<typename T>
 inline List<T>::List(std::initializer_list<T> list) : m_length(0), m_head(nullptr), m_tail(nullptr)
 {
-	if (list.size() <= 0)
+	if (list.size() == 0)
 		return;
-
-	
 	for (T item : list)
 	{
 		pushBack(item);
@@ -56,9 +55,6 @@ inline List<T>::~List()
 	m_head = nullptr;
 	delete m_tail;
 	m_tail = nullptr;
-
-	
-
 }
 
 template<typename T>
@@ -66,15 +62,18 @@ inline void List<T>::pushFront(const T& value)
 {
 	Node<T>* newNode = new Node<T>(value);
 	m_length++;
+
 	if (!m_tail)
 	{
 		m_head = newNode;
 		m_tail = newNode;
 		return;
 	}
+
 	m_head->previous = newNode;
 	newNode->next = m_head;
 	m_head = newNode;
+
 }
 
 template<typename T>
@@ -88,6 +87,7 @@ inline void List<T>::pushBack(const T& value)
 		m_tail = newNode;
 		return;
 	}
+
 	m_tail->next = newNode;
 	newNode->previous = m_tail;
 	m_tail = newNode;
@@ -100,6 +100,7 @@ inline T List<T>::popFront()
 		return T();
 
 	T value = m_head->value;
+
 
 	if (!m_head->next)
 	{
@@ -121,121 +122,101 @@ inline T List<T>::popFront()
 template<typename T>
 inline T List<T>::popBack()
 {
-	
 	if (!m_tail)
 		return T();
 
-	
 	T value = m_tail->value;
 
-	
+
 	if (!m_tail->previous)
 	{
 		delete m_tail;
 		m_tail = nullptr;
 		m_head = nullptr;
 		m_length = 0;
-		return value;
 	}
 	else
 	{
 		m_tail = m_tail->previous;
 		delete m_tail->next;
+		m_tail->next = nullptr;
 		m_length--;
 	}
-	
 	return value;
 }
 
 template<typename T>
 inline bool List<T>::insert(const T& value, int index)
 {
-	
-	if (index < 0 || index > m_length)
+	if (index < 0 || index >= m_length)
 		return false;
 
-	
 	if (!m_tail || index == 0)
 	{
-		
 		pushFront(value);
 		return true;
 	}
 
-	
 	if (index == m_length)
 	{
-		
 		pushBack(value);
 		return true;
 	}
-	
+
 	Node<T>* node = m_head;
 	for (int i = 0; i < index; i++)
 	{
-		
 		if (node->next == nullptr)
 			return false;
-
-		
 		node = node->next;
 	}
-
-	
 	Node<T>* newNode = new Node<T>(value);
-	
 	newNode->previous = node->previous;
-	
 	newNode->next = node;
-	
 	node->previous = newNode;
-	
 	newNode->previous->next = newNode;
-	
 	m_length++;
 	return true;
+
 }
 
 template<typename T>
 inline int List<T>::remove(const T& value)
 {
-
+	//if no tail list is empty
 	if (!m_tail)
 		return 0;
+
+
 
 	int count = 0;
 
 
 	Node<T>* node = m_head;
-
-
-	while (node && node->value == value)
-	{
-		
-		popFront();
-		node = m_head;
-		count++;
-		
-
-	}
-
 	while (node && m_tail && node != m_tail->next)
 	{
-
+		//if nodes value is value to remove
 		if (node->value == value)
 		{
+			//r3move node
 			if (node != m_head)
 			{
-				node->[previous->next - node->next; ]
+				node->previous->next = node->next;
+
 			}
-			
-			if (node == m_tail)
+			else {
+				popFront();
+				node = m_head;
+				count++;
+				continue;
+			}
+			if (node != m_tail)
 			{
 				node->next->previous = node->previous;
 				Node<T>* temp = node;
 				node = node->next;
-				delete node;
-				node = nullptr;
+				//decrment length
+				delete temp;
 				m_length--;
 				count++;
 
@@ -246,7 +227,6 @@ inline int List<T>::remove(const T& value)
 				node = m_tail;
 				count++;
 			}
-			
 		}
 		else
 		{
@@ -254,27 +234,25 @@ inline int List<T>::remove(const T& value)
 
 		}
 	}
-	
 	return count;
+
 }
 
 template<typename T>
 inline T List<T>::first() const
 {
-	
 	if (!m_head)
+	{
 		return T();
-	
+	}
 	return m_head->value;
 }
 
 template<typename T>
 inline T List<T>::last() const
 {
-	
 	if (!m_tail)
 		return T();
-	
 	return m_tail->value;
 }
 
@@ -297,17 +275,14 @@ inline Iterator<T> List<T>::end() const
 template<typename T>
 inline void List<T>::destroy()
 {
-	
 	if (!m_tail)
 		return;
-	
+
 	for (int i = 0; i < m_length; i++)
 	{
-		
 		popBack();
 	}
 
-	
 	m_head = nullptr;
 	m_tail = nullptr;
 	m_length = 0;

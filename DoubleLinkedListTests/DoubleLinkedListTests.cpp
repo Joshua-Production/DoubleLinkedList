@@ -63,18 +63,16 @@ namespace DoubleLinkedListTests
 		{
 
 			List<int> list = { 1, 2, 3 };
-			int value = list.popFront();
-			Assert::AreEqual(1, value);
+			list.popFront();
+			
 			Assert::AreEqual(2, list.first());
 			Assert::AreEqual(2, list.getLength());
 
-			value = list.popFront();
-			Assert::AreEqual(2, value);
+			list.popFront();
 			Assert::AreEqual(3, list.first());
 			Assert::AreEqual(1, list.getLength());
 
-			value = list.popFront();
-			Assert::AreEqual(3, value);
+			list.popFront();
 			Assert::AreEqual(0, list.getLength());
 			Assert::AreEqual(0, list.first());
 		}
@@ -132,16 +130,20 @@ namespace DoubleLinkedListTests
 		}
 		TEST_METHOD(Remove)
 		{
-			List<int> list;
+			List<int> list{};
 			Assert::IsNotNull(&list);
+
+			list.pushBack(1);
 			list.pushBack(0);
 			list.pushBack(1);
 			list.pushBack(2);
 			list.pushBack(1);
 			list.pushBack(3);
 			list.pushBack(1);
-
+			Assert::AreEqual(7, list.getLength());
 			Iterator<int> iter = list.begin();
+			Assert::AreEqual(1, *iter);
+			iter++;
 			Assert::AreEqual(0, *iter);
 			iter++;
 			Assert::AreEqual(1, *iter);
@@ -153,18 +155,22 @@ namespace DoubleLinkedListTests
 			Assert::AreEqual(3, *iter);
 			iter++;
 			Assert::AreEqual(1, *iter);
+
 			
 			int count = list.remove(1);
-			Assert::AreEqual(3, count);
+			Assert::AreEqual(4, count);
 			Assert::AreEqual(3, list.getLength());
 			iter = list.begin();
+			Assert::AreEqual(*iter, list.first());
 			Assert::AreEqual(0, *iter);
 			iter++;
 			Assert::AreEqual(2, *iter);
 			iter++;
 			Assert::AreEqual(3, *iter);
+			iter++;
+			Assert::IsTrue(iter == nullptr);
 
-
+			
 			count = list.remove(5);
 			Assert::AreEqual(0, count);
 			Assert::AreEqual(3, list.getLength());
@@ -174,6 +180,25 @@ namespace DoubleLinkedListTests
 			Assert::AreEqual(2, *iter);
 			iter++;
 			Assert::AreEqual(3, *iter);
+
+			
+			list = List<int>();
+			Assert::IsNotNull(&list);
+			list.pushBack(3);
+			list.pushBack(3);
+			list.pushBack(3);
+			Assert::AreEqual(3, list.getLength());
+			iter = list.begin();
+			Assert::AreEqual(3, *iter);
+			iter++;
+			Assert::AreEqual(3, *iter);
+			iter++;
+			Assert::AreEqual(3, *iter);
+			list.remove(3);
+			count = list.remove(3);
+			Assert::AreEqual(0, list.getLength());
+			Assert::AreEqual(0, list.first());
+			Assert::AreEqual(0, list.last());
 		}
 		
 
